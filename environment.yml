@@ -1,0 +1,10 @@
+# conda env create|update -f environment.yml
+name: non-probabilistic-ml
+channels:
+- defaults
+dependencies:
+- python=3.9.*
+- pip=22.*
+- pip:
+  - -r requirements.txt
+  - --editable=src/.
