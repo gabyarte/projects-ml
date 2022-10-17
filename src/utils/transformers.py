@@ -1,5 +1,8 @@
 import numpy as np
+import pandas as pd
+
 from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.preprocessing import OneHotEncoder
 
 class AssignTransformer(BaseEstimator, TransformerMixin):
     """
@@ -98,3 +101,38 @@ class MergeTransformer(BaseEstimator, TransformerMixin):
         else:
             df_ = df_.merge(right_df, **self.merge_kwargs)
         return df_
+
+
+class OneHotPandas(OneHotEncoder):
+    def __init__( self, 
+                  categories = 'auto', drop=None, sparse = False, dtype = np.int, 
+                  handle_unknown = 'ignore', key_var = None ):
+        # OneHotEncoder originals
+        super().__init__(categories=categories, drop=drop, 
+                         sparse=sparse, dtype=dtype, handle_unknown=handle_unknown)
+                
+        # In order to keep pandas column names
+        self.original_names = None
+        self.feature_names = None
+        self.key_var = key_var
+
+    def clean_feature_names(self, cols):
+        new_names=[]
+        for col in cols:
+            new_names.append(col.replace(".0", ""))
+        return new_names
+
+    def fit(self, X, y=None):
+        _fit = super().fit(X.set_index(self.key_var))
+        self.original_names = self.clean_feature_names(
+            _fit.get_feature_names(list(X.set_index(self.key_var).columns)))
+        return _fit
+
+    def transform(self, X, y=None):
+        _transform = pd.DataFrame(
+            super().transform(X.set_index(self.key_var)),
+            dtype=self.dtype,
+            columns=self.original_names)
+        self.feature_names= [f for f in self.original_names if not ('9999' in f or '99' in f)]
+
+        return pd.concat([X[[self.key_var]],_transform[ self.feature_names]], axis=1)
