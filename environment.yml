@@ -1,5 +1,5 @@
 # conda env create|update -f environment.yml
-name: non-probabilistic-ml
+name: project-ml
 channels:
 - defaults
 dependencies:

@@ -1,7 +1,7 @@
 import setuptools
 
 setuptools.setup(
-    name="non-probabilistic-ml",
+    name="project-ml",
     version="0.1.0",
     author="Gabriela Argüelles",
     author_email="gabyarte2@gmail.com",
