@@ -1,6 +1,6 @@
 # UPM Master's in Data Science: Machine Learning project
 
-Machine Learning project using non-probabilistic models for classification of people dedicated to unpaid domestic work
+Machine Learning project using probabilistic and non-probabilistic models, unsupervised learning and probabilistic graphical models for classification of poverty.
 
 ## Non-probabilistic models
 The non-probabilistic models used on this projects are the following:
@@ -9,4 +9,8 @@ The non-probabilistic models used on this projects are the following:
 * Classification Trees
 * K-Nearest Neighbors (KNN)
 
-All of these models were applied using Weka software.
+## Probabilistic models
+The probabilistic models used on this project are:
+* Logistic Regression
+* Bayesian Models
+* Discriminant Analysis
