@@ -3,7 +3,7 @@ name: project-ml
 channels:
 - defaults
 dependencies:
-- python=3.9.*
+- python=3.10.*
 - pip=22.*
 - pip:
   - -r requirements.txt
