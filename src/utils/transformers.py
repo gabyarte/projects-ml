@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
 
 class AssignTransformer(BaseEstimator, TransformerMixin):
     """
@@ -44,18 +44,13 @@ class NameTransformer(BaseEstimator, TransformerMixin):
             return df.copy() if condition else df
 
         # if `keep_features` is list, keep only renamed and listed columns
-        if isinstance(self.keep_features, list):
-            X_ = copy_if(X[list(self.names_map.keys()) + self.keep_features],
-                         self.copy)
-        elif isinstance(self.keep_features, bool):
-            # if `keep_features` is False, keep only renamed variables
-            if not self.keep_features:
-                    X_ = copy_if(X[list(self.names_map.keys())], self.copy)
-            # if `keep_features` is True, keep all variables
-            else:
-                X_ = copy_if(X, self.copy)
+        # if `keep_features` is False, keep only renamed variables
+        if isinstance(self.keep_features, list) or not self.keep_features:
+            columns = list(self.names_map.keys()) + (self.keep_features or [])
+            X_ = copy_if(X[columns], self.copy)
         else:
-            X_ = None 
+            # if `keep_features` is True, keep all variables
+            X_ = copy_if(X, self.copy)
         X_ = X_.rename(self.names_map, axis=1)
         return X_
 
@@ -127,7 +122,8 @@ class OneHotPandas(OneHotEncoder):
             super().transform(X.set_index(self.key_var)),
             dtype=self.dtype,
             columns=self.original_names)
-        self.feature_names= [f for f in self.original_names if not ('9999' in f or '99' in f)]
+        self.feature_names= [f for f in self.original_names
+                               if not ('9999' in f or '99' in f)]
 
         return pd.concat(
             [X[[self.key_var]], _transform[self.feature_names]],
