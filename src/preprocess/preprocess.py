@@ -2,14 +2,14 @@ import numpy as np
 import pandas as pd
 
 NAMES_MAP = {
-    'v2a1': 'monthly_rent',     # REVIEW nan
+    'v2a1': 'monthly_rent',     # REVIEW nan => 0
     'hacdor': 'is_overcrowd_by_bedrooms',
     'rooms': 'number_rooms',
     'hacapo': 'is_overcrowd_by_rooms',
     'v14a': 'has_toilet',
     'refrig': 'has_refrigerator',
     'v18q': 'has_tablet',
-    'v18q1': 'number_tablet',   # REVIEW nan, related with has_tablet
+    'v18q1': 'number_tablet',   # REVIEW nan, related with has_tablet => 0
     'r4h1': 'male_12-',
     'r4h2': 'male_12+',
     'r4h3': 'total_males',
@@ -22,7 +22,7 @@ NAMES_MAP = {
     'tamhog': 'household_size',
     'tamviv': 'tenenment_size',
     'escolari': 'scholarship_years',
-    'rez_esc': 'behind_school_years',   # REVIEW nan, may be related with scholarship_years
+    'rez_esc': 'behind_school_years',   # REVIEW nan, may be related with scholarship_years => 0
     'paredblolad': 'wall_block_or_brick',
     'paredzocalo': 'wall_socket',
     'paredpreb': 'wall_prefabricated_or_cement',
@@ -101,7 +101,7 @@ NAMES_MAP = {
     'dependency': 'dependency_rate',
     'edjefe': 'male_head_education_years',
     'edjefa': 'female_head_education_years',
-    'meaneduc': 'education_years_mean_18+',     # REVIEW nan
+    'meaneduc': 'education_years_mean_18+',     # REVIEW nan => mean(scholarship_years)
     'instlevel1': 'education_no',
     'instlevel2': 'education_primary_incomplete',
     'instlevel3': 'education_primary_complete',
@@ -137,7 +137,7 @@ NAMES_MAP = {
     'sqbhogar_nin': 'children_19-_sqd',
     'sqbovercrowding': 'members_per_room_sqd',
     'sqbdependency': 'dependency_rate_sqd',
-    'sqbmeaned': 'education_years_mean_18+_sqd',    # REVIEW nan, related with education_years_mean_18+
+    'sqbmeaned': 'education_years_mean_18+_sqd',    # REVIEW nan, related with education_years_mean_18+ => education_years_mean_18+^2
 }
 
 KEEP_FEATURES = ['idhogar', 'age']
