@@ -141,3 +141,31 @@ NAMES_MAP = {
 }
 
 KEEP_FEATURES = ['idhogar', 'age']
+
+ASSIGN_MAP = {
+    'monthly_rent': lambda df: np.where(
+        df['monthly_rent'].isna(),
+        0,
+        df['monthly_rent']
+    ),
+    'number_tablet': lambda df: np.where(
+        df['number_tablet'].isna(),
+        0,
+        df['number_tablet']
+    ),
+    'behind_school_years': lambda df: np.where(
+        df['behind_school_years'].isna(),
+        0,
+        df['behind_school_years']
+    ),
+    'education_years_mean_18+': lambda df: np.where(
+        df['education_years_mean_18+'].isna(),
+        df.groupby('idhogar')['scholarship_years'].transform('mean'),
+        df['education_years_mean_18+']
+    ),
+    'education_years_mean_18+_sqd': lambda df: np.where(
+        df['education_years_mean_18+_sqd'].isna(),
+        df['education_years_mean_18+'] ** 2,
+        df['education_years_mean_18+_sqd']
+    ),
+}
