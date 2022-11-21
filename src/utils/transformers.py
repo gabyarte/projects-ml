@@ -1,8 +1,10 @@
 import numpy as np
 import pandas as pd
 
+from itertools import chain
+
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.preprocessing import OneHotEncoder, FunctionTransformer
+from sklearn.preprocessing import OneHotEncoder
 
 class AssignTransformer(BaseEstimator, TransformerMixin):
     """
@@ -90,6 +92,35 @@ class MergeTransformer(BaseEstimator, TransformerMixin):
         else:
             df_ = df_.merge(self.right_df, **self.merge_kwargs)
         return df_
+
+
+class AggregateTransformer(BaseEstimator, TransformerMixin):
+    def __init__(self, aggregations, key, keep=False):
+        self.aggregations = aggregations
+        self.index = key
+        self.keep = keep
+        self.columns_rest = []
+
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X, y=None):
+        if self.keep:
+            used_columns = set(chain.from_iterable(self.aggregations.values()))
+            self.columns_rest = X.columns.difference(used_columns).tolist()
+
+        aggregated_dfs = [
+            X[columns + [self.index]] \
+                .groupby(self.index) \
+                .apply(function)\
+                .rename({col: f'{col}_{function}' for col in columns}, axis=1)
+            for function, columns in self.aggregations.items()
+        ]
+        return pd.concat(
+            aggregated_dfs \
+            + [X[self.columns_rest].groupby(self.index).first()],
+            axis=1
+        )
 
 
 class OneHotPandas(OneHotEncoder):

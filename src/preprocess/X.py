@@ -142,7 +142,10 @@ NAMES_MAP = {
 
 KEEP_FEATURES = ['idhogar', 'age']
 
+INDEX_KEY = 'idhogar'
+
 ASSIGN_MAP = {
+    # impute NaN 
     'monthly_rent': lambda df: np.where(
         df['monthly_rent'].isna(),
         0,
@@ -160,7 +163,7 @@ ASSIGN_MAP = {
     ),
     'education_years_mean_18+': lambda df: np.where(
         df['education_years_mean_18+'].isna(),
-        df.groupby('idhogar')['scholarship_years'].transform('mean'),
+        df.groupby(INDEX_KEY)['scholarship_years'].transform('mean'),
         df['education_years_mean_18+']
     ),
     'education_years_mean_18+_sqd': lambda df: np.where(
@@ -168,4 +171,35 @@ ASSIGN_MAP = {
         df['education_years_mean_18+'] ** 2,
         df['education_years_mean_18+_sqd']
     ),
+
+    # change type of education years
+    'male_head_education_years': lambda df: 
+        df['male_head_education_years'] \
+            .replace({'yes': 0, 'no': 0}) \
+            .astype(int),
+    'female_head_education_years': lambda df: 
+        df['female_head_education_years'] \
+            .replace({'yes': 0, 'no': 0}) \
+            .astype(int),
+    'dependency_rate': lambda df: 
+        df['dependency_rate'] \
+            .replace({'yes': 0, 'no': 0}) \
+            .astype(float)
+}
+
+
+AGGREGATE_MAP = {
+    'sum': [
+        'is_disable', 'kinship_household_head', 'kinship_partner',
+        'kinship_children', 'kinship_stepchildren', 'kinship_children_in_low',
+        'kinship_grandchildren', 'kinship_parent', 'kinship_parent_in_low',
+        'kinship_sibling', 'kinship_sibling_in_low', 'kinship_other_family',
+        'kinship_not_family'
+    ],
+    'mean': [
+        # proportions of specific population in a household
+        'is_disable', 'is_male', 'is_female', 'scholarship_years_sqd',
+        'age_sqd', 'children_19-_sqd', 'members_per_room_sqd', 'children_19-',
+        'adults_number', 'member_65+', 'age'
+    ]
 }
