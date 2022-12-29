@@ -175,15 +175,15 @@ ASSIGN_MAP = {
     # change type of education years
     'male_head_education_years': lambda df: 
         df['male_head_education_years'] \
-            .replace({'yes': 0, 'no': 0}) \
+            .replace({'yes': 1, 'no': 0}) \
             .astype(int),
     'female_head_education_years': lambda df: 
         df['female_head_education_years'] \
-            .replace({'yes': 0, 'no': 0}) \
+            .replace({'yes': 1, 'no': 0}) \
             .astype(int),
     'dependency_rate': lambda df: 
         df['dependency_rate'] \
-            .replace({'yes': 0, 'no': 0}) \
+            .replace({'yes': 1, 'no': 0}) \
             .astype(float)
 }
 
