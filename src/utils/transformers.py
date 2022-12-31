@@ -5,6 +5,7 @@ from itertools import chain
 
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import OneHotEncoder
+from sklearn.feature_selection import SelectKBest
 
 class AssignTransformer(BaseEstimator, TransformerMixin):
     """
@@ -21,6 +22,7 @@ class AssignTransformer(BaseEstimator, TransformerMixin):
     def transform(self, X):
         X_ = X.copy() if self.copy else X
         return X_.assign(**self.assign_map)
+
 
 class NameTransformer(BaseEstimator, TransformerMixin):
     """
@@ -55,6 +57,7 @@ class NameTransformer(BaseEstimator, TransformerMixin):
             X_ = copy_if(X, self.copy)
         X_ = X_.rename(self.names_map, axis=1)
         return X_
+
 
 class MergeTransformer(BaseEstimator, TransformerMixin):
     """
@@ -159,3 +162,12 @@ class OneHotPandas(OneHotEncoder):
         return pd.concat(
             [X[[self.key_var]], _transform[self.feature_names]],
             axis=1)
+
+
+class SelectKBestTransformer(SelectKBest):
+    def transform(self, X, y=None):
+        _transform = pd.DataFrame(
+            super().transform(X),
+            index=X.index,
+            columns=self.get_feature_names_out(X.columns))
+        return _transform
