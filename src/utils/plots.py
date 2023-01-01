@@ -1,13 +1,15 @@
-import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 def plot_features_scores(
-    X, scores, y_label=r'Univariate score ($-Log(p_{value})$)'):
-    X_indices = np.arange(X.shape[-1])
-    plt.figure(1)
-    plt.clf()
-    plt.bar(X_indices - 0.05, scores, width=0.2)
+    X, scores, metric_label=r'$-log(p_{value})$'):
+    scores_df = pd.DataFrame({'scores': scores, 'columns': X.columns}) \
+    .sort_values('scores', ascending=False)
+    plt.figure(figsize=(10, 20))
+    sns.barplot(data=scores_df, x='scores', y='columns', color='blue')
+    plt.grid(True)
     plt.title("Feature univariate score")
-    plt.xlabel("Feature number")
-    plt.ylabel(y_label)
+    plt.xlabel(f'Unvariate score ({metric_label})')
+    plt.ylabel('')
     plt.show()
