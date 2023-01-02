@@ -7,6 +7,8 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.feature_selection import SelectKBest
 
+from ReliefF import ReliefF
+
 class AssignTransformer(BaseEstimator, TransformerMixin):
     """
     Class for applying `DataFrame.assign`, using a dict as
@@ -171,3 +173,29 @@ class SelectKBestTransformer(SelectKBest):
             index=X.index,
             columns=self.get_feature_names_out(X.columns))
         return _transform
+
+
+class ReliefFTransformer(ReliefF):
+    def fit(self, X, y):
+        if isinstance(X, pd.DataFrame) and isinstance(y, pd.DataFrame):
+            self.feature_names_in_ = X.columns
+            X_, y_ = X.values, y.values.flatten()
+        else:
+            self.feature_names_in_ = None
+            X_, y_ = X.copy(), y.copy()
+        return super().fit(X_, y_)
+
+    def transform(self, X):
+        if isinstance(X, pd.DataFrame):
+            X_ = X.values
+        else:
+            X_ = X.copy()
+
+        transform_ = super().transform(X_)
+
+        if not self.feature_names_in_.empty:
+            self.feature_names_out_ = self.feature_names_in_[
+                self.top_features[:self.n_features_to_keep]]
+            return pd.DataFrame(transform_, columns=self.feature_names_out_)
+
+        return transform_
