@@ -200,6 +200,9 @@ class ReliefFTransformer(ReliefF):
         if not self.feature_names_in_.empty:
             self.feature_names_out_ = self.feature_names_in_[
                 self.top_features[:self.n_features_to_keep]]
-            return pd.DataFrame(transform_, columns=self.feature_names_out_)
+            return pd.DataFrame(
+                transform_,
+                index=X.index,
+                columns=self.feature_names_out_)
 
         return transform_
