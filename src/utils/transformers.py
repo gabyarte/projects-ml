@@ -100,10 +100,11 @@ class MergeTransformer(BaseEstimator, TransformerMixin):
 
 
 class AggregateTransformer(BaseEstimator, TransformerMixin):
-    def __init__(self, aggregations, key, keep=False):
+    def __init__(self, aggregations, key, keep=False, exclude=None):
         self.aggregations = aggregations
         self.index = key
         self.keep = keep
+        self.exclude = exclude
         self.columns_rest = []
 
     def fit(self, X, y=None):
@@ -113,6 +114,9 @@ class AggregateTransformer(BaseEstimator, TransformerMixin):
         if self.keep:
             used_columns = set(chain.from_iterable(self.aggregations.values()))
             self.columns_rest = X.columns.difference(used_columns).tolist()
+            if self.exclude:
+                self.columns_rest = \
+                    list(set(self.columns_rest).difference(self.exclude))
 
         aggregated_dfs = [
             X[columns + [self.index]] \
