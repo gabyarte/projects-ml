@@ -4,7 +4,7 @@ import pandas as pd
 from itertools import chain
 
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
 from sklearn.feature_selection import SelectKBest
 
 from ReliefF import ReliefF
@@ -170,13 +170,21 @@ class OneHotPandas(OneHotEncoder):
             axis=1)
 
 
-class SelectKBestTransformer(SelectKBest):
+class PandasMixin:
     def transform(self, X, y=None):
         _transform = pd.DataFrame(
             super().transform(X),
             index=X.index,
             columns=self.get_feature_names_out(X.columns))
         return _transform
+
+
+class MinMaxScalerTransformer(PandasMixin, MinMaxScaler):
+    pass
+
+
+class SelectKBestTransformer(PandasMixin, SelectKBest):
+    pass
 
 
 class ReliefFTransformer(ReliefF):
