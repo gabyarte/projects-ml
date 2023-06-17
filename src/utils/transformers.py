@@ -5,7 +5,7 @@ from itertools import chain
 
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
-from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import SelectKBest, SequentialFeatureSelector
 
 from ReliefF import ReliefF
 
@@ -214,3 +214,9 @@ class ReliefFTransformer(ReliefF):
                 columns=self.feature_names_out_)
 
         return transform_
+
+
+class SequentialFeatureSelectorTransformer(
+    PandasMixin, SequentialFeatureSelector
+):
+    pass
