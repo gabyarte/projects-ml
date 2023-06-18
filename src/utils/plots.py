@@ -27,7 +27,7 @@ def plot_features_scores(
     set_y('')
 
 
-def decision_boundary_plot(estimator, X, y, model='model'):
+def decision_boundary_plot(estimator, X, y, model='model', ax=None):
     _X = PCA(n_components=2).fit_transform(X, y)
     _X = pd.DataFrame(_X)
 
@@ -36,7 +36,8 @@ def decision_boundary_plot(estimator, X, y, model='model'):
         _X,
         response_method='predict',
         cmap=plt.cm.coolwarm,
-        alpha=0.8
+        alpha=0.8,
+        ax=ax
     )
     decision_boundary.ax_.scatter(
         x=_X[0],
@@ -46,8 +47,10 @@ def decision_boundary_plot(estimator, X, y, model='model'):
         s=20,
         edgecolors='k'
     )
-    plt.title(f'Decision boundary of {model}')
-    plt.show()
+    if ax:
+        ax.set_title(f'Decision boundary of {model}')
+    else:
+        plt.title(f'Decision boundary of {model}')
 
 
 def plot_resampling(X, y, sampler):
