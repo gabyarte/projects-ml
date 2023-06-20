@@ -8,6 +8,7 @@ The non-probabilistic models used on this projects are the following:
 * Rule Induction
 * Classification Trees
 * K-Nearest Neighbors (KNN)
+* Artificial Neural Networks (ANN)
 
 ## Probabilistic models
 The probabilistic models used on this project are:
