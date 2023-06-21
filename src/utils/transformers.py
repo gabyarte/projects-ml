@@ -134,7 +134,7 @@ class AggregateTransformer(BaseEstimator, TransformerMixin):
 
 class OneHotPandas(OneHotEncoder):
     def __init__(self, categories='auto', drop=None, sparse=False,
-                 dtype=np.int, handle_unknown='ignore', key_var=None ):
+                 dtype=int, handle_unknown='ignore', key_var=None ):
         # OneHotEncoder originals
         super().__init__(categories=categories, drop=drop, sparse=sparse,
                          dtype=dtype, handle_unknown=handle_unknown)
